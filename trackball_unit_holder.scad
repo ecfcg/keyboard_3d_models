@@ -1,36 +1,66 @@
+$fs = 0.05;
+
+// キーキャップ穴の大きさ
+hole_side_len = 13.8;
+
+// キーキャップ穴の大きさ / 2
+hsl = hole_side_len / 2;
+
+// ツメの高さ
+hook_height = 0.6;
+
+// キーキャップ穴の大きさ / 2 + ツメの高さ
+hsl_hh = hsl + hook_height;
+
+// pcbの厚さ
+pcb_thick = 1.2;
+
+// ツメとホルダーの間の厚さ
+holding_hook_thick = 1;
 
 // ツメの三角形部分
 module diamond(){
-    translate([0, 0, -0.5])
+    translate([0, 0, -hook_height/2])
         polyhedron(
             points = [
-                [8, 6.95, 0], [8, -6.95, 0], [-8, -6.95, 0], [-8, 6.95, 0],
-                [0, 6.95,-12], [0, -6.95,-12], [0, 6.95, 4], [0, -6.95, 4] ],
+                [hsl_hh, hsl, 0], [hsl_hh, -hsl, 0], [-hsl_hh, -hsl, 0], [-hsl_hh, hsl, 0],
+                [0, hsl, -hsl_hh/2], [0, -hsl, -hsl_hh/2], [0, hsl, hsl_hh/2], [0, -hsl, hsl_hh/2] ],
             faces = [
                 [0, 3, 4], [1, 5, 2], [0, 4, 5, 1], [2, 5, 4, 3],
                 [0, 6, 3], [1, 2, 7], [0, 1, 7, 6], [2, 3, 6, 7]
                 ]);
 }
 
-// 14*14の角穴に引っ掛けるツメ部分
+module rounded_cube(height) {
+    h = 0.001;
+    minkowski () {
+        cube([hole_side_len - 1.5, hole_side_len - 1.5, height + h], center = true);
+        cylinder(r = 0.75, h = h);
+    }
+}
+
+// キースイッチ用の角穴に引っ掛けるツメ部分
 // pcb厚1.2㎜を想定
 module holding_hook() {
-    translate([0, 0, -1.3])
+    translate([0, 0, -pcb_thick])
         difference() {
             union() {
-                translate([-6.95,-6.95, 0]) cube([13.9, 13.9, 1.4]);
+                translate([0, 0, (pcb_thick+0.5)/2]) rounded_cube(pcb_thick + 0.5);
                 union(){
                     intersection() {
                         diamond();
-                        translate([-6.95, -6.95, -12.5]) cube([13.9, 13.9, 18]);
+                        rounded_cube(18);
                     }
-                    difference() {
+                    intersection() {
                         diamond();
                         translate([-9,-3,-13]) cube([18, 6, 18]);
                     }
                 }
             }
-            translate([-5.95, -8, -12.5]) cube([11.9, 16, 18]);
+            translate([-(hole_side_len - holding_hook_thick * 2)/2, -8, -20])
+                cube([hole_side_len - holding_hook_thick * 2, 16, 25]);
+            translate([-hsl-0.5, -3.5, 0])
+                cube([hole_side_len + 1, 7, 2]);
         }
 }
 
@@ -40,17 +70,17 @@ module trackball_unit_holder() {
     difference(){
         translate([-10, -8, 0])
             cube([20, 16, 9.5]);
-        translate([-8.5, -9, 1.5])
-            cube([17, 18, 7]);
+        translate([-8.4, -9, 1.5])
+            cube([16.8, 18, 7]);
         translate([-6, -9, 2])
             cube([12, 18, 10]);
-        translate([-4.05, -9, -2])
+        translate([-4.1, -9, -2])
             cube([10, 5, 4]);
     }
 }
 
-for (x = [0: 1]) {
-    for (y = [0: 1]) {
+for (x = [0: 0]) {
+    for (y = [0: 0]) {
         translate([x * 22, y * 18, 0])
             trackball_unit_holder();
     }
