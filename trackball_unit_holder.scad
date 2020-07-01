@@ -1,4 +1,4 @@
-$fs = 0.05;
+$fs = 0.01;
 
 // キーキャップ穴の大きさ
 hole_side_len = 13.8;
@@ -32,7 +32,7 @@ module diamond(){
 }
 
 module rounded_cube(height) {
-    h = 0.001;
+    h = 0.01;
     minkowski () {
         cube([hole_side_len - 1.5, hole_side_len - 1.5, height + h], center = true);
         cylinder(r = 0.75, h = h);
