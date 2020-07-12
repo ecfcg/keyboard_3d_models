@@ -13,7 +13,7 @@ hook_height = 0.6;
 hsl_hh = hsl + hook_height;
 
 // pcbの厚さ
-pcb_thick = 1.2;
+pcb_thick = 1.5;
 
 // ツメとホルダーの間の厚さ
 holding_hook_thick = 1;
@@ -64,16 +64,32 @@ module holding_hook() {
         }
 }
 
+// トラックボール保持部
+module holder() {
+    x = 17.3 / 2;
+    y = 9.0;
+    z = 6.9;
+    polyhedron(
+        points = [
+            [x, y, 0], [x, -y, 0], [-x, -y, 0], [-x, y, 0],
+            [x, y, z], [x, -y, z], [0, -y, z - 0.2], [-x, -y, z], [-x, y, z], [0, y, z - 0.2]
+        ],
+        faces = [
+            [0, 1, 5, 4], [1, 2, 7, 6, 5], [2, 3, 8, 7], [3, 0, 4, 9, 8],
+            [0, 3, 2, 1], [4, 5, 6, 9], [6, 7, 8, 9]
+        ]);
+}
+
 // ホルダー本体
 module trackball_unit_holder() {
     holding_hook();
     difference(){
         translate([-10, -8, 0])
             cube([20, 16, 9.5]);
-        translate([-8.4, -9, 1.5])
-            cube([16.8, 18, 7]);
-        translate([-6, -9, 2])
-            cube([12, 18, 10]);
+        translate([0, 0, 1.5])
+            holder();
+        translate([-5, -9, 2])
+            cube([10, 18, 15]);
         translate([-4.1, -9, -2])
             cube([10, 5, 4]);
     }
