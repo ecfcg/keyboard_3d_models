@@ -1,7 +1,7 @@
 $fs = 0.01;
 
 // キーキャップ穴の大きさ
-hole_side_len = 13.8;
+hole_side_len = 13.9;
 
 // キーキャップ穴の大きさ / 2
 hsl = hole_side_len / 2;
@@ -13,7 +13,7 @@ hook_height = 0.6;
 hsl_hh = hsl + hook_height;
 
 // pcbの厚さ
-pcb_thick = 1.5;
+pcb_thick = 1.2;
 
 // ツメとホルダーの間の厚さ
 holding_hook_thick = 1;
@@ -66,7 +66,7 @@ module holding_hook() {
 
 // トラックボール保持部
 module holder() {
-    x = 17.3 / 2;
+    x = 17.1 / 2;
     y = 9.0;
     z = 6.9;
     polyhedron(
@@ -88,15 +88,15 @@ module trackball_unit_holder() {
             cube([20, 16, 9.5]);
         translate([0, 0, 1.5])
             holder();
-        translate([-5, -9, 2])
-            cube([10, 18, 15]);
+        translate([-5.5, -9, 2])
+            cube([11, 18, 15]);
         translate([-4.1, -9, -2])
             cube([10, 5, 4]);
     }
 }
 
-for (x = [0: 0]) {
-    for (y = [0: 0]) {
+for (x = [0: 1]) {
+    for (y = [0: 1]) {
         translate([x * 22, y * 18, 0])
             trackball_unit_holder();
     }
